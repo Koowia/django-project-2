@@ -1,63 +1,65 @@
-<div class="cart-item" id="cart-item-{{ item.id }}" style="padding: 1.25rem 0; border-bottom: 1px solid #f0f0f0; display: grid; grid-template-columns: 90px 1fr; gap: 1rem;">
+{% load main_tags %}
 
-    <!-- Фото -->
-    <div style="width: 90px; height: 110px; background: #f5f5f5; overflow: hidden; flex-shrink: 0;">
+<article class="cart-item" id="cart-item-{{ item.id }}">
+    <div class="cart-item__image-wrap">
         {% if item.product.main_image %}
-            <img src="{{ item.product.main_image.url }}"
+            <img class="cart-item__image"
+                 src="{{ item.product.main_image.url }}"
                  alt="{{ item.product.name }}"
-                 style="width: 100%; height: 100%; object-fit: cover;">
+                 loading="lazy">
         {% else %}
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                <span style="font-size:0.6rem;color:#ccc;letter-spacing:0.1em;">НЕТ ФОТО</span>
-            </div>
+            <div class="cart-item__placeholder">НЕТ ФОТО</div>
         {% endif %}
     </div>
 
-    <!-- Инфо -->
-    <div style="display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;">
-                <p style="font-size: 0.7rem; letter-spacing: 0.12em; color: #0a0a0a; font-weight: 600; font-family: 'Inter', sans-serif;">{{ item.product.name|upper }}</p>
-                <button style="font-size: 0.55rem; letter-spacing: 0.15em; color: #aaa; background: none; border: none; cursor: pointer; font-family: 'Inter', sans-serif; padding: 0;"
+    <div class="cart-item__content">
+        <div class="cart-item__top">
+            <div class="cart-item__copy">
+                <p class="cart-item__brand">{{ item.product.category.name|upper }}</p>
+                <h3 class="cart-item__name">{{ item.product.name|upper }}</h3>
+            </div>
+            <button class="cart-item__remove"
+                    type="button"
+                    aria-label="Удалить {{ item.product.name }} из корзины"
                     hx-post="{% url 'cart:remove_item' item.id %}"
                     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    hx-target="#cart-modal"
-                    hx-swap="outerHTML"
-                    hx-trigger="click"
-                    onmouseover="this.style.color='#0a0a0a'" onmouseout="this.style.color='#aaa'">
-                    УДАЛИТЬ
-                </button>
-            </div>
-            <p style="font-size: 0.6rem; letter-spacing: 0.1em; color: #999; font-family: 'Inter', sans-serif; margin-bottom: 0.2rem;">ЦВЕТ: {{ item.product.color|upper }}</p>
-            <p style="font-size: 0.6rem; letter-spacing: 0.1em; color: #999; font-family: 'Inter', sans-serif; margin-bottom: 0.75rem;">РАЗМЕР: {{ item.product_size.size.name }}</p>
+                    hx-target="#cart-container"
+                    hx-swap="innerHTML">
+                ×
+            </button>
         </div>
 
-        <!-- Счётчик + цена -->
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <button style="width: 22px; height: 22px; border: 1px solid #e0e0e0; background: transparent; color: #0a0a0a; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;"
-                    hx-post="{% url 'cart:update_item' item.id %}"
-                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    hx-vals='{"quantity": "{{ item.quantity|add:-1 }}"}'
-                    hx-target="#cart-modal"
-                    hx-swap="outerHTML"
-                    hx-trigger="click"
-                    {% if item.quantity <= 1 %}disabled style="width: 22px; height: 22px; border: 1px solid #e0e0e0; background: transparent; color: #ccc; font-size: 14px; cursor: not-allowed; display: flex; align-items: center; justify-content: center;"{% endif %}>
+        <div class="cart-item__details">
+            <p>ЦВЕТ: {{ item.product.color|upper }}</p>
+            <p>РАЗМЕР: {{ item.product_size.size.name|upper }}</p>
+        </div>
+
+        <div class="cart-item__bottom">
+            <div class="cart-quantity" aria-label="Количество">
+                <button class="cart-quantity__button"
+                        type="button"
+                        aria-label="Уменьшить количество"
+                        hx-post="{% url 'cart:update_item' item.id %}"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-vals='{"quantity": "{{ item.quantity|add:-1 }}"}'
+                        hx-target="#cart-container"
+                        hx-swap="innerHTML"
+                        {% if item.quantity <= 1 %}disabled{% endif %}>
                     −
                 </button>
-                <span style="font-size: 0.7rem; color: #0a0a0a; min-width: 20px; text-align: center; font-family: 'Inter', sans-serif;">{{ item.quantity }}</span>
-                <button style="width: 22px; height: 22px; border: 1px solid #e0e0e0; background: transparent; color: #0a0a0a; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;"
-                    hx-post="{% url 'cart:update_item' item.id %}"
-                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                    hx-vals='{"quantity": "{{ item.quantity|add:1 }}"}'
-                    hx-target="#cart-modal"
-                    hx-swap="outerHTML"
-                    hx-trigger="click">
+                <span class="cart-quantity__value">{{ item.quantity }}</span>
+                <button class="cart-quantity__button"
+                        type="button"
+                        aria-label="Увеличить количество"
+                        hx-post="{% url 'cart:update_item' item.id %}"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-vals='{"quantity": "{{ item.quantity|add:1 }}"}'
+                        hx-target="#cart-container"
+                        hx-swap="innerHTML">
                     +
                 </button>
             </div>
-            {% load main_tags %}
-            <p style="font-size: 0.8rem; color: #0a0a0a; font-weight: 500; font-family: 'Inter', sans-serif;">{{ item.product.price|format_price }}</p>
+            <p class="cart-item__price">{{ item.total_price|format_price }}</p>
         </div>
     </div>
-</div>
+</article>

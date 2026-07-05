@@ -1,16 +1,16 @@
-<div class="text-center py-20 text-gray-500">
-    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+<div class="cart-empty">
+    <svg class="cart-empty__star" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 4l3.8 22.2L58 32l-22.2 5.8L32 60l-3.8-22.2L6 32l22.2-5.8L32 4z"></path>
+        <path d="M32 19v26M19 32h26"></path>
     </svg>
-    <p class="text-lg mb-4">Your cart is empty</p>
-    <button onclick="closeCart()" class="text-sm underline hover:text-gray-700">Continue shopping</button>
+    <h3>КОРЗИНА ПУСТА</h3>
+    <p>Добавьте товары, чтобы<br>продолжить покупки.</p>
+    <a class="cart-empty__button"
+       href="{% url 'main:catalog_all' %}"
+       hx-get="{% url 'main:catalog_all' %}"
+       hx-target="#main-content"
+       hx-push-url="true"
+       onclick="closeCart()">
+        ПЕРЕЙТИ К КАТАЛОГУ <span aria-hidden="true">→</span>
+    </a>
 </div>
-
-<script>
-    // Update cart count
-    document.getElementById('cart-count').textContent = '0';
-    updateHeaderCartCount(0);
-    
-    // Hide cart summary
-    document.getElementById('cart-summary').style.display = 'none';
-</script>

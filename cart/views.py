@@ -23,18 +23,36 @@ class CartMixin:
         request.session.modified = True
         return cart
 
+    @staticmethod
+    def cart_context(cart):
+        total_items = cart.total_items
+        last_two = total_items % 100
+        last_digit = total_items % 10
+        if last_two in range(11, 15):
+            item_word = 'ТОВАРОВ'
+        elif last_digit == 1:
+            item_word = 'ТОВАР'
+        elif last_digit in (2, 3, 4):
+            item_word = 'ТОВАРА'
+        else:
+            item_word = 'ТОВАРОВ'
 
-class CartModalView(CartMixin, View):
-    def get(self, request):
-        cart = self.get_cart(request)
-        context = {
+        return {
             'cart': cart,
             'cart_items': cart.items.select_related(
                 'product',
                 'product_size__size',
-            ).order_by('-added_at')
+                'product__category',
+            ).order_by('-added_at'),
+            'cart_items_count': total_items,
+            'cart_items_count_label': f'{total_items} {item_word}',
         }
-        return TemplateResponse(request, 'cart/cart_modal.html', context)
+
+
+class CartModalView(CartMixin, View):
+    def get(self, request):
+        cart = self.get_cart(request)
+        return TemplateResponse(request, 'cart/cart_modal.html', self.cart_context(cart))
 
 
 class AddToCartView(CartMixin, View):
@@ -113,14 +131,7 @@ class UpdateCartItemView(CartMixin, View):
 
         request.session.modified = True
 
-        context = {
-            'cart': cart,
-            'cart_items': cart.items.select_related(
-                'product',
-                'product_size__size',
-            ).order_by('-added_at')
-        }
-        return TemplateResponse(request, 'cart/cart_modal.html', context)
+        return TemplateResponse(request, 'cart/cart_modal.html', self.cart_context(cart))
 
 
 class RemoveCartItemView(CartMixin, View):
@@ -131,14 +142,7 @@ class RemoveCartItemView(CartMixin, View):
 
         request.session.modified = True
 
-        context = {
-            'cart': cart,
-            'cart_items': cart.items.select_related(
-                'product',
-                'product_size__size',
-            ).order_by('-added_at')
-        }
-        return TemplateResponse(request, 'cart/cart_modal.html', context)
+        return TemplateResponse(request, 'cart/cart_modal.html', self.cart_context(cart))
 
 
 class CartCountView(CartMixin, View):
@@ -158,7 +162,7 @@ class ClearCartView(CartMixin, View):
         request.session.modified = True
 
         if request.headers.get('HX-Request'):
-            return TemplateResponse(request, 'cart/cart_empty.html', {'cart': cart})
+            return TemplateResponse(request, 'cart/cart_modal.html', self.cart_context(cart))
 
         return JsonResponse({'success': True, 'message': 'Cart cleared.'})
 
@@ -166,11 +170,4 @@ class ClearCartView(CartMixin, View):
 class CartSummaryView(CartMixin, View):
     def get(self, request):
         cart = self.get_cart(request)
-        context = {
-            'cart': cart,
-            'cart_items': cart.items.select_related(
-                'product',
-                'product_size__size',
-            ).order_by('-added_at')
-        }
-        return TemplateResponse(request, 'cart/cart_summary.html', context)
+        return TemplateResponse(request, 'cart/cart_summary.html', self.cart_context(cart))

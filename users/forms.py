@@ -9,16 +9,24 @@ User = get_user_model()
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True, max_length=254, widget=forms.EmailInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'EMAIL'}))
-    first_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'FIRST NAME'}))
-    last_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'LAST NAME'}))
+    email = forms.EmailField(required=True, max_length=254, widget=forms.EmailInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Введите email'}))
+    first_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Введите имя'}))
+    last_name = forms.CharField(required=True, max_length=50, widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Введите фамилию'}))
     password1 = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'PASSWORD'})
+        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Создайте пароль'})
     )
     password2 = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'CONFIRM PASSWORD'})
+        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Повторите пароль'})
+    )
+    personal_data_consent = forms.BooleanField(
+        required=True,
+        error_messages={'required': 'Необходимо дать согласие на обработку персональных данных.'},
+    )
+    user_agreement_consent = forms.BooleanField(
+        required=True,
+        error_messages={'required': 'Необходимо принять пользовательское соглашение и подтвердить ознакомление с политикой конфиденциальности.'},
     )
 
 
@@ -35,10 +43,10 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 class CustomUserLoginForm(AuthenticationForm):
-    username = forms.CharField(label="Email", widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'EMAIL'}))
+    username = forms.CharField(label="Email", widget=forms.TextInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Введите email'}))
     password = forms.CharField(
         label="Password",
-        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'PASSWORD'})
+        widget=forms.PasswordInput(attrs={'class': 'dotted-input w-full py-3 text-sm font-medium text-gray-900 placeholder-gray-500', 'placeholder': 'Введите пароль'})
     )
 
 
@@ -107,4 +115,3 @@ class CustomUserUpdateForm(forms.ModelForm):
             if cleaned_data.get(field):
                 cleaned_data[field] = strip_tags(cleaned_data[field])
         return cleaned_data
-

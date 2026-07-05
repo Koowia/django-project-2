@@ -6,6 +6,16 @@ from .models import Category, Product, Size
 from django.db.models import Q
 
 
+LEGAL_DOCUMENTS = {
+    'privacy_policy': 'ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ',
+    'personal_data_consent': 'СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ',
+    'user_agreement': 'ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ',
+    'public_offer': 'ПУБЛИЧНАЯ ОФЕРТА',
+    'payment_delivery': 'ОПЛАТА И ДОСТАВКА',
+    'returns_exchange': 'ВОЗВРАТ И ОБМЕН',
+}
+
+
 class IndexView(TemplateView):
     template_name = 'main/home.html'
 
@@ -154,3 +164,19 @@ def search_suggestions(request):
         name__icontains=query
     ).values_list('name', flat=True)[:6]
     return JsonResponse({'results': list(products)})
+
+
+class LegalDocumentView(TemplateView):
+    template_name = 'main/legal_document.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        document_key = kwargs['document_key']
+        context['document_title'] = LEGAL_DOCUMENTS[document_key]
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if request.headers.get('HX-Request'):
+            return TemplateResponse(request, 'main/legal_document_content.html', context)
+        return TemplateResponse(request, self.template_name, context)

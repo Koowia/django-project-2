@@ -1,83 +1,625 @@
+{% load static %}
+
 {% block content %}
 <style>
+    #main-content {
+        padding-top: 0 !important;
+        background: #050505;
+        --header-height: 72px;
+    }
+
+    .auth-screen,
+    .auth-screen * {
+        box-sizing: border-box;
+    }
+
+    .auth-screen {
+        position: relative;
+        width: 100%;
+        min-height: calc(100svh - var(--header-height));
+        color: #f3eee4;
+        background:
+            linear-gradient(90deg, rgba(5, 5, 5, 0.94) 0%, rgba(5, 5, 5, 0.82) 47%, rgba(5, 5, 5, 0.5) 100%),
+            linear-gradient(0deg, rgba(5, 5, 5, 0.78), rgba(5, 5, 5, 0.36)),
+            url("{% static 'main/img/home/hero-noctis.png' %}") center right / cover no-repeat,
+            #050505;
+    }
+
+    .auth-screen::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 30% 13%, rgba(241, 239, 232, 0.08), transparent 15rem),
+            radial-gradient(circle at 86% 44%, rgba(241, 239, 232, 0.09), transparent 13rem);
+    }
+
+    .auth-screen__inner {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        min-height: calc(100svh - var(--header-height));
+        margin: 0 auto;
+        padding: clamp(1.7rem, 3vw, 2.4rem) clamp(24px, 4vw, 48px) clamp(4rem, 8vw, 7rem);
+        display: grid;
+        align-content: start;
+    }
+
+    .auth-panel {
+        width: min(100%, 490px);
+        margin: clamp(2.7rem, 8vh, 5rem) auto 0;
+        justify-self: center;
+    }
+
+    .auth-heading {
+        text-align: center;
+    }
+
+    .auth-heading h1 {
+        margin: 0;
+        color: #f3eee4;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(3rem, 4vw, 4.6rem);
+        line-height: 0.95;
+        letter-spacing: 0.22em;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    .auth-heading__rule {
+        display: grid;
+        grid-template-columns: minmax(70px, 1fr) auto minmax(70px, 1fr);
+        align-items: center;
+        gap: 16px;
+        width: clamp(220px, 25vw, 300px);
+        max-width: 100%;
+        margin: 1.25rem auto 1.35rem;
+        color: rgba(243, 238, 228, 0.52);
+    }
+
+    .auth-heading__line {
+        width: 100%;
+        height: 1px;
+        background: currentColor;
+        opacity: 0.45;
+    }
+
+    .auth-heading__star {
+        width: 14px;
+        height: 14px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.15;
+    }
+
+    .auth-heading p {
+        margin: 0;
+        color: rgba(243, 238, 228, 0.66);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.92rem;
+        line-height: 1.75;
+    }
+
+    .auth-form {
+        margin-top: clamp(2.3rem, 5vw, 4rem);
+    }
+
+    .auth-field {
+        margin-bottom: 1.55rem;
+    }
+
+    .auth-label {
+        display: block;
+        margin-bottom: 0.55rem;
+        color: rgba(243, 238, 228, 0.7);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.66rem;
+        line-height: 1;
+        letter-spacing: 0.18em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .auth-input-wrap {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(255, 255, 255, 0.025);
+        box-shadow: none;
+        transition:
+            border-color 220ms ease,
+            background-color 220ms ease,
+            box-shadow 220ms ease;
+    }
+
     .dotted-input {
-        border: none;
-        border-bottom: 2px dotted #d1d5db;
+        width: 100%;
+        height: 56px;
+        border: 0;
         background: transparent;
-        outline: none;
-        transition: border-color 0.3s ease;
+        outline: 0;
+        box-shadow: none;
+        padding: 0 1.1rem;
+        color: #f3eee4;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.86rem;
+        font-weight: 400;
+        letter-spacing: 0.02em;
     }
-    .dotted-input:focus {
-        border-bottom-color: #374151;
+
+    .auth-input-wrap--password .dotted-input {
+        padding-right: 3.25rem;
     }
+
     .dotted-input::placeholder {
-        color: #6b7280;
-        font-weight: 500;
+        color: rgba(243, 238, 228, 0.42);
+        font-weight: 400;
+    }
+
+    .auth-input-wrap:hover {
+        border-color: rgba(220, 210, 190, 0.3);
+        background: rgba(18, 18, 18, 0.66);
+    }
+
+    .auth-input-wrap:focus-within {
+        border-color: rgba(220, 210, 190, 0.52);
+        background: rgba(20, 20, 20, 0.72);
+        box-shadow: 0 0 14px rgba(210, 216, 224, 0.14);
+    }
+
+    .dotted-input:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .dotted-input:-webkit-autofill,
+    .dotted-input:-webkit-autofill:hover,
+    .dotted-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #f3eee4;
+        caret-color: #f3eee4;
+        box-shadow: 0 0 0 1000px rgba(12, 12, 12, 0.88) inset;
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
+    .auth-password-toggle {
+        position: absolute;
+        top: 50%;
+        right: 1rem;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: rgba(243, 238, 228, 0.58);
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(-50%);
+        transition:
+            color 200ms ease,
+            opacity 180ms ease,
+            visibility 180ms ease;
+    }
+
+    .auth-password-toggle.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .auth-password-toggle:hover,
+    .auth-password-toggle:focus-visible {
+        color: #f3eee4;
+    }
+
+    .auth-password-toggle svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .auth-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin: 0.2rem 0 2.45rem;
+        color: rgba(243, 238, 228, 0.62);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.64rem;
+        letter-spacing: 0.17em;
+        font-weight: 600;
+    }
+
+    .auth-checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.85rem;
+    }
+
+    .auth-checkbox input {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        flex: 0 0 auto;
+        appearance: none;
+        border: 1px solid rgba(220, 225, 232, 0.34);
+        border-radius: 2px;
+        background: rgba(12, 12, 12, 0.4);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 0 0;
+        box-shadow: none;
+        cursor: pointer;
+        transition:
+            border-color 180ms ease,
+            background-color 180ms ease,
+            box-shadow 180ms ease,
+            background-size 180ms ease;
+    }
+
+    .auth-checkbox:hover input {
+        border-color: rgba(220, 225, 232, 0.52);
+        box-shadow: 0 0 12px rgba(210, 220, 235, 0.08);
+    }
+
+    .auth-checkbox input:checked {
+        border-color: rgba(243, 238, 228, 0.62);
+        background-color: rgba(243, 238, 228, 0.1);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'%3E%3Cpath d='M4.2 9.2 7.4 12.3 13.8 5.7' fill='none' stroke='%23f3eee4' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-size: 18px 18px;
+    }
+
+    .auth-checkbox input:focus-visible {
+        outline: 1px solid rgba(220, 210, 190, 0.7);
+        outline-offset: 4px;
+    }
+
+    .auth-muted {
+        color: rgba(243, 238, 228, 0.56);
+    }
+
+    .auth-submit,
+    .auth-google {
+        width: 100%;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.18em;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .auth-submit {
+        border: 1px solid rgba(220, 210, 190, 0.36);
+        background: #f2eee5;
+        color: #080808;
+        cursor: pointer;
+        transition:
+            border-color 240ms ease,
+            box-shadow 240ms ease,
+            background-color 240ms ease;
+    }
+
+    .auth-submit span {
+        transition: transform 230ms ease;
+    }
+
+    .auth-submit:hover,
+    .auth-submit:focus-visible {
+        border-color: rgba(220, 210, 190, 0.62);
+        background: #e9e3d8;
+        box-shadow: 0 0 18px rgba(220, 210, 190, 0.1);
+    }
+
+    .auth-submit:hover span,
+    .auth-submit:focus-visible span {
+        transform: translateX(3px);
+    }
+
+    .auth-divider {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 1.3rem;
+        margin: 2rem 0 1.6rem;
+        color: rgba(243, 238, 228, 0.42);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.64rem;
+        letter-spacing: 0.2em;
+        font-weight: 600;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+        content: '';
+        height: 1px;
+        background: rgba(243, 238, 228, 0.14);
+    }
+
+    .auth-google {
+        border: 1px solid rgba(243, 238, 228, 0.17);
+        background: rgba(8, 8, 8, 0.32);
+        color: rgba(243, 238, 228, 0.72);
+        cursor: not-allowed;
+    }
+
+    .auth-google__mark {
+        position: absolute;
+        left: 1.25rem;
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .auth-google {
+        position: relative;
+    }
+
+    .auth-switch {
+        margin: 2rem 0 0;
+        color: rgba(243, 238, 228, 0.58);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.78rem;
+        text-align: center;
+    }
+
+    .auth-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-left: 8px;
+        color: rgba(242, 238, 229, 0.9);
+        border: 0;
+        background: transparent;
+        text-decoration: none;
+        letter-spacing: 0.1em;
+        font-size: 0.7rem;
+        font-weight: 600;
+        transition:
+            color 220ms ease,
+            transform 220ms ease,
+            text-shadow 220ms ease;
+    }
+
+    .auth-link::before,
+    .auth-link::after {
+        content: none;
+    }
+
+    .auth-link:hover,
+    .auth-link:focus-visible {
+        color: #f4f0e7;
+        transform: translateX(2px);
+        text-shadow: 0 0 12px rgba(225, 230, 238, 0.14);
+    }
+
+    .auth-link__arrow {
+        opacity: 0.65;
+        font-size: 0.95em;
+        transition:
+            opacity 220ms ease,
+            transform 220ms ease;
+    }
+
+    .auth-link:hover .auth-link__arrow,
+    .auth-link:focus-visible .auth-link__arrow {
+        opacity: 1;
+        transform: translateX(3px);
+    }
+
+    .auth-error,
+    .auth-errors {
+        margin-top: 0.5rem;
+        color: rgba(214, 116, 108, 0.92);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.72rem;
+        line-height: 1.45;
+    }
+
+    .auth-errors {
+        margin: 0 0 1.4rem;
+        text-align: center;
+    }
+
+    .auth-screen a:focus-visible,
+    .auth-screen button:focus-visible {
+        outline: 1px solid rgba(220, 210, 190, 0.7);
+        outline-offset: 4px;
+    }
+
+    .auth-screen input:focus-visible {
+        outline: 0;
+    }
+
+    @media (max-width: 760px) {
+        .auth-screen {
+            min-height: calc(100svh - var(--header-height));
+            background:
+                linear-gradient(90deg, rgba(5, 5, 5, 0.96), rgba(5, 5, 5, 0.82)),
+                url("{% static 'main/img/home/hero-noctis.png' %}") 62% center / cover no-repeat,
+                #050505;
+        }
+
+        .auth-screen__inner {
+            width: 100%;
+            padding-inline: 20px;
+            padding-bottom: 3.5rem;
+        }
+
+        .auth-panel {
+            width: 100%;
+            margin: clamp(2.5rem, 8vh, 4rem) 0 0;
+        }
+
+        .auth-heading h1 {
+            font-size: clamp(2.7rem, 12vw, 3.8rem);
+            letter-spacing: 0.18em;
+        }
+
+        .auth-row {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dotted-input,
+        .auth-submit,
+        .auth-submit span,
+        .auth-link,
+        .auth-link__arrow {
+            transition: none;
+        }
+
+        .auth-submit:hover span,
+        .auth-submit:focus-visible span,
+        .auth-link:hover,
+        .auth-link:focus-visible,
+        .auth-link:hover .auth-link__arrow,
+        .auth-link:focus-visible .auth-link__arrow {
+            transform: none;
+        }
     }
 </style>
 
-<div class="min-h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 class="text-2xl font-bold text-gray-900 mb-8 text-center tracking-wide">
-            LOG IN
-        </h1>
-        
-        {% if messages %}
-            <div class="mb-4">
-                {% for message in messages %}
-                    <div class="text-red-500 text-sm text-center">{{ message }}</div>
-                {% endfor %}
+<section class="auth-screen auth-screen--login" aria-labelledby="auth-login-title">
+    <div class="auth-screen__inner">
+        <div class="auth-panel">
+            <div class="auth-heading">
+                <h1 id="auth-login-title">ВХОД</h1>
+                <div class="auth-heading__rule" aria-hidden="true">
+                    <span class="auth-heading__line"></span>
+                    <svg class="auth-heading__star" viewBox="0 0 24 24">
+                        <path d="M12 2l1.6 8.4L22 12l-8.4 1.6L12 22l-1.6-8.4L2 12l8.4-1.6L12 2z"></path>
+                    </svg>
+                    <span class="auth-heading__line"></span>
+                </div>
+                <p>Добро пожаловать.<br>Войдите в свой аккаунт</p>
             </div>
-        {% endif %}
-        
-        <form id="loginForm" method="post" class="space-y-6" 
-              hx-post="{% url 'users:login' %}" 
-              hx-target="#main-content">
-            {% csrf_token %}
-            
-            <div>
-                {{ form.username }}
-                {% if form.username.errors %}
-                    <div class="text-red-500 text-xs mt-1">{{ form.username.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div>
-                {{ form.password }}
-                {% if form.password.errors %}
-                    <div class="text-red-500 text-xs mt-1">{{ form.password.errors }}</div>
-                {% endif %}
-            </div>
-            
-            <div class="grid grid-cols-2 gap-4 pt-4">
-                <button 
-                    type="submit"
-                    class="bg-black hover:bg-gray-500 text-white font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide"
-                >
-                    LOG IN
+
+            {% if messages %}
+                <div class="auth-errors">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="auth-errors">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <form id="loginForm"
+                  class="auth-form"
+                  method="post"
+                  hx-post="{% url 'users:login' %}"
+                  hx-target="#main-content">
+                {% csrf_token %}
+
+                <div class="auth-field">
+                    <label class="auth-label" for="{{ form.username.id_for_label }}">Email</label>
+                    <div class="auth-input-wrap">
+                        {{ form.username }}
+                    </div>
+                    {% if form.username.errors %}
+                        <div class="auth-error">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="auth-field">
+                    <label class="auth-label" for="{{ form.password.id_for_label }}">Пароль</label>
+                    <div class="auth-input-wrap auth-input-wrap--password">
+                        {{ form.password }}
+                        <button class="auth-password-toggle"
+                                type="button"
+                                aria-label="Показать пароль"
+                                data-password-toggle="{{ form.password.id_for_label }}">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"></path>
+                                <circle cx="12" cy="12" r="2.5"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <div class="auth-error">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="auth-row">
+                    <label class="auth-checkbox">
+                        <input type="checkbox" name="remember" value="1">
+                        <span>ЗАПОМНИТЬ МЕНЯ</span>
+                    </label>
+                    <span class="auth-muted">ЗАБЫЛИ ПАРОЛЬ?</span>
+                </div>
+
+                <button class="auth-submit" type="submit">
+                    ВОЙТИ В АККАУНТ <span aria-hidden="true">→</span>
                 </button>
-                <a 
-                    href="{% url 'users:register' %}"
-                    hx-get="{% url 'users:register' %}"
-                    hx-target="#main-content"
-                    hx-push-url="true"
-                    class="border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 font-semibold py-3 px-6 transition-colors duration-200 text-sm tracking-wide text-center"
-                >
-                    CREATE AN ACCOUNT
-                </a>
-            </div>
-        </form>
+
+                <div class="auth-divider">ИЛИ</div>
+
+                <button class="auth-google" type="button" disabled aria-disabled="true">
+                    <span class="auth-google__mark" aria-hidden="true">G</span>
+                    ВОЙТИ ЧЕРЕЗ GOOGLE
+                </button>
+
+                <p class="auth-switch">
+                    Ещё нет аккаунта?
+                    <a class="auth-link"
+                       href="{% url 'users:register' %}"
+                       hx-get="{% url 'users:register' %}"
+                       hx-target="#main-content"
+                       hx-push-url="true">СОЗДАТЬ АККАУНТ <span class="auth-link__arrow" aria-hidden="true">→</span></a>
+                </p>
+            </form>
+        </div>
     </div>
-</div>
+</section>
 
 <script>
-    document.querySelectorAll('.dotted-input').forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-        });
-        input.addEventListener('blur', function() {
-            this.parentElement.classList.remove('focused');
+    const passwordToggleButtons = document.querySelectorAll('[data-password-toggle]');
+
+    function syncPasswordToggle(button) {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        if (!input) return;
+        const hasValue = input.value.length > 0;
+        button.classList.toggle('is-visible', hasValue);
+        button.disabled = !hasValue;
+        button.tabIndex = hasValue ? 0 : -1;
+        if (!hasValue && input.type !== 'password') {
+            input.type = 'password';
+            button.setAttribute('aria-label', 'Показать пароль');
+        }
+    }
+
+    passwordToggleButtons.forEach((button) => {
+        const input = document.getElementById(button.dataset.passwordToggle);
+        if (!input) return;
+        syncPasswordToggle(button);
+        input.addEventListener('input', () => syncPasswordToggle(button));
+        button.addEventListener('click', () => {
+            const show = input.type === 'password';
+            input.type = show ? 'text' : 'password';
+            button.setAttribute('aria-label', show ? 'Скрыть пароль' : 'Показать пароль');
         });
     });
+
+    window.addEventListener('pageshow', () => {
+        passwordToggleButtons.forEach(syncPasswordToggle);
+    });
+
+    window.setTimeout(() => {
+        passwordToggleButtons.forEach(syncPasswordToggle);
+    }, 100);
 </script>
 {% endblock %}

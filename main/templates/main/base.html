@@ -252,7 +252,7 @@
             transform: scale(1.05);
         }
 
-        .is-home-page .site-footer {
+        .site-footer {
             position: relative;
             overflow: hidden;
             isolation: isolate;
@@ -265,7 +265,7 @@
             background-position: center center;
         }
 
-        .is-home-page .site-footer::before {
+        .site-footer::before {
             content: '';
             position: absolute;
             inset: 0;
@@ -276,9 +276,54 @@
                 linear-gradient(90deg, rgba(5, 5, 5, 0.54), transparent 34%, transparent 66%, rgba(5, 5, 5, 0.54));
         }
 
-        .is-home-page .site-footer > * {
+        .site-footer > * {
             position: relative;
             z-index: 1;
+        }
+
+        .footer-heading {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            color: #f5f5f5;
+            letter-spacing: 0.17em;
+            font-weight: 600;
+            line-height: 1.3;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .footer-heading--support {
+            letter-spacing: clamp(0.12em, 0.8vw, 0.16em);
+        }
+
+        .footer-link {
+            display: inline-block;
+            max-width: 100%;
+            color: #888;
+            opacity: 0.78;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            line-height: 1.45;
+            text-decoration: none;
+            border: 0;
+            overflow-wrap: anywhere;
+            transition:
+                color 200ms ease,
+                opacity 200ms ease,
+                transform 200ms ease;
+        }
+
+        .footer-link::before,
+        .footer-link::after {
+            content: none;
+        }
+
+        .footer-link:hover,
+        .footer-link:focus-visible {
+            color: #f5f5f5;
+            opacity: 1;
+            transform: translateX(2px);
         }
 
         @media (max-width: 680px) {
@@ -337,6 +382,18 @@
 
             footer > div:last-child {
                 padding: 1.5rem 1.25rem !important;
+            }
+
+            .footer-heading,
+            .footer-heading--support {
+                letter-spacing: 0.11em;
+                text-align: left;
+            }
+
+            .footer-link {
+                letter-spacing: 0.04em;
+                overflow-wrap: normal;
+                word-break: normal;
             }
         }
     </style>
@@ -493,54 +550,73 @@
     <div style="padding: 4rem; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4rem; border-bottom: 1px solid #1a1a1a;">
 
         <div style="display: flex; flex-direction: column; align-items: flex-start;">
-            <h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: #f5f5f5; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 2rem;">ПРАВОВАЯ ИНФОРМАЦИЯ</h3>
+            <h3 class="footer-heading">ПРАВОВАЯ ИНФОРМАЦИЯ</h3>
             <nav style="display: flex; flex-direction: column; gap: 1.1rem;">
-                <a href="#"
-                   style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#888'">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a>
-                <a href="#"
-                   style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#888'">ПУБЛИЧНАЯ ОФЕРТА</a>
+                <a href="{% url 'main:personal_data_consent' %}"
+                   hx-get="{% url 'main:personal_data_consent' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ОБРАБОТКА ПЕРСОНАЛЬНЫХ ДАННЫХ</a>
+                <a href="{% url 'main:privacy_policy' %}"
+                   hx-get="{% url 'main:privacy_policy' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a>
+                <a href="{% url 'main:user_agreement' %}"
+                   hx-get="{% url 'main:user_agreement' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ</a>
+                <a href="{% url 'main:payment_delivery' %}"
+                   hx-get="{% url 'main:payment_delivery' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ОПЛАТА И ДОСТАВКА</a>
+                <a href="{% url 'main:public_offer' %}"
+                   hx-get="{% url 'main:public_offer' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ПУБЛИЧНАЯ ОФЕРТА</a>
+                <a href="{% url 'main:returns_exchange' %}"
+                   hx-get="{% url 'main:returns_exchange' %}"
+                   hx-target="#main-content"
+                   hx-push-url="true"
+                   class="footer-link">ВОЗВРАТ И ОБМЕН</a>
             </nav>
         </div>
 
         <div style="display: flex; flex-direction: column; align-items: flex-start; justify-self: center;">
-            <h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: #f5f5f5; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 2rem;">НАВИГАЦИЯ</h3>
+            <h3 class="footer-heading">НАВИГАЦИЯ</h3>
             <nav style="display: flex; flex-direction: column; gap: 1.1rem;">
                 <a href="{% url 'main:index' %}"
                    hx-get="{% url 'main:index' %}"
                    hx-target="#main-content"
                    hx-push-url="true"
-                   style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#888'">ГЛАВНАЯ</a>
+                   class="footer-link">ГЛАВНАЯ</a>
                 <a href="{% url 'main:catalog_all' %}"
                    hx-get="{% url 'main:catalog_all' %}"
                    hx-target="#main-content"
                    hx-push-url="true"
-                   style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#888'">КАТАЛОГ</a>
+                   class="footer-link">КАТАЛОГ</a>
                 <a href="#"
                    style="color: #444; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; cursor: default;">О БРЕНДЕ — СКОРО</a>
                 <a href="{% url 'users:profile' %}"
                    hx-get="{% url 'users:profile' %}"
                    hx-target="#main-content"
                    hx-push-url="true"
-                   style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#888'">АККАУНТ</a>
+                   class="footer-link">АККАУНТ</a>
             </nav>
         </div>
 
         <div style="display: flex; flex-direction: column; align-items: flex-end;">
             <div style="display: flex; flex-direction: column; align-items: center;">
-                <h3 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; color: #f5f5f5; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 2rem;">СЛУЖБА ПОДДЕРЖКИ</h3>
+                <h3 class="footer-heading footer-heading--support">СЛУЖБА ПОДДЕРЖКИ</h3>
                 <div style="display: flex; flex-direction: column; gap: 1.1rem; align-items: center;">
                     <p style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; line-height: 1.8; text-align: center;">
                         Есть вопросы?<br>Мы всегда на связи.
                     </p>
                     <a href="mailto:support@kwdev.ru"
-                       style="color: #888; font-family: 'Inter', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; text-decoration: none; transition: color 0.2s; border-bottom: 1px solid #555; padding-bottom: 0.25rem; display: inline-block;"
-                       onmouseover="this.style.color='#f5f5f5'; this.style.borderColor='#f5f5f5'"
-                       onmouseout="this.style.color='#888'; this.style.borderColor='#555'">
+                       class="footer-link">
                         НАПИСАТЬ НАМ →
                     </a>
                 </div>

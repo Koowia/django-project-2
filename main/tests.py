@@ -8,6 +8,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from .models import Category, Product, ProductSize, Size
+from users.forms import CustomUserCreationForm
 
 
 TEST_MEDIA_ROOT = tempfile.mkdtemp()
@@ -89,6 +90,10 @@ class MainRenderingTests(TestCase):
     def count_home_product_cards(self, content):
         return len(re.findall(r'class="home-product-card(?:\s|")', content))
 
+    def assert_ordered(self, content, expected_items):
+        positions = [content.index(item) for item in expected_items]
+        self.assertEqual(positions, sorted(positions))
+
     def test_full_get_home(self):
         response = self.client.get(reverse('main:index'))
 
@@ -100,6 +105,27 @@ class MainRenderingTests(TestCase):
         self.assertNotContains(response, 'home-category-link')
         self.assert_home_has_no_removed_editorial_copy(response)
         self.assert_no_duplicate_ids(response)
+
+    def test_footer_legal_links_have_current_labels_and_order(self):
+        response = self.client.get(reverse('main:index'))
+        content = response.content.decode()
+
+        expected_links = (
+            'ОБРАБОТКА ПЕРСОНАЛЬНЫХ ДАННЫХ',
+            'ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ',
+            'ПОЛЬЗОВАТЕЛЬСКОЕ СОГЛАШЕНИЕ',
+            'ОПЛАТА И ДОСТАВКА',
+            'ПУБЛИЧНАЯ ОФЕРТА',
+            'ВОЗВРАТ И ОБМЕН',
+        )
+        self.assert_ordered(content, expected_links)
+        self.assertContains(response, reverse('main:personal_data_consent'))
+        self.assertContains(response, reverse('main:privacy_policy'))
+        self.assertContains(response, reverse('main:user_agreement'))
+        self.assertContains(response, reverse('main:payment_delivery'))
+        self.assertContains(response, reverse('main:public_offer'))
+        self.assertContains(response, reverse('main:returns_exchange'))
+        self.assertNotContains(response, 'СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ</a>')
 
     def test_full_get_catalog(self):
         response = self.client.get(reverse('main:catalog_all'))
@@ -126,6 +152,42 @@ class MainRenderingTests(TestCase):
         self.assertContains(response, self.product.name.upper())
         self.assertContains(response, self.product.description)
         self.assertNotContains(response, 'РОЖДЕНО В ТЕМНОТЕ')
+
+    def test_full_get_login_contains_shared_layout(self):
+        response = self.client.get(reverse('users:login'))
+        content = response.content.decode()
+
+        self.assert_full_page(response)
+        self.assertIn('<header', content)
+        self.assertContains(response, 'id="loginForm"')
+        self.assertContains(response, 'ВХОД')
+        self.assertContains(response, 'Введите email')
+        self.assertContains(response, 'Введите пароль')
+        self.assertNotContains(response, '← НА ГЛАВНУЮ')
+
+    def test_full_get_register_contains_shared_layout(self):
+        response = self.client.get(reverse('users:register'))
+        content = response.content.decode()
+
+        self.assert_full_page(response)
+        self.assertIn('<header', content)
+        self.assertContains(response, 'id="createAccountForm"')
+        self.assertContains(response, 'РЕГИСТРАЦИЯ')
+        self.assertContains(response, 'Введите имя')
+        self.assertContains(response, 'Повторите пароль')
+        self.assertContains(response, 'personal_data_consent')
+        self.assertContains(response, 'user_agreement_consent')
+        self.assertContains(response, reverse('main:personal_data_consent'))
+        self.assertContains(response, reverse('main:user_agreement'))
+        self.assertContains(response, reverse('main:privacy_policy'))
+        self.assertNotContains(response, '← НА ГЛАВНУЮ')
+
+    def test_full_get_legal_document(self):
+        response = self.client.get(reverse('main:personal_data_consent'))
+
+        self.assert_full_page(response)
+        self.assertContains(response, 'СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ')
+        self.assertContains(response, 'Документ находится в подготовке')
 
     def test_htmx_get_home(self):
         response = self.client.get(
@@ -170,6 +232,106 @@ class MainRenderingTests(TestCase):
         self.assert_htmx_partial(response)
         self.assertContains(response, self.product.name.upper())
         self.assertContains(response, self.product.description)
+
+    def test_htmx_get_login_returns_partial_without_shared_layout(self):
+        response = self.client.get(reverse('users:login'), HTTP_HX_REQUEST='true')
+        content = response.content.decode()
+
+        self.assert_htmx_partial(response)
+        self.assertNotIn('<header', content)
+        self.assertNotIn('id="main-content"', content)
+        self.assertContains(response, 'id="loginForm"')
+        self.assertContains(response, 'ВХОД')
+        self.assertContains(response, 'Введите email')
+        self.assertContains(response, 'Введите пароль')
+        self.assertNotContains(response, '← НА ГЛАВНУЮ')
+
+    def test_htmx_get_register_returns_partial_without_shared_layout(self):
+        response = self.client.get(reverse('users:register'), HTTP_HX_REQUEST='true')
+        content = response.content.decode()
+
+        self.assert_htmx_partial(response)
+        self.assertNotIn('<header', content)
+        self.assertNotIn('id="main-content"', content)
+        self.assertContains(response, 'id="createAccountForm"')
+        self.assertContains(response, 'РЕГИСТРАЦИЯ')
+        self.assertContains(response, 'Введите имя')
+        self.assertContains(response, 'Повторите пароль')
+        self.assertContains(response, 'personal_data_consent')
+        self.assertContains(response, 'user_agreement_consent')
+        self.assertNotContains(response, '← НА ГЛАВНУЮ')
+
+    def test_htmx_get_legal_document_returns_partial_without_shared_layout(self):
+        response = self.client.get(
+            reverse('main:personal_data_consent'),
+            HTTP_HX_REQUEST='true',
+        )
+        content = response.content.decode()
+
+        self.assert_htmx_partial(response)
+        self.assertNotIn('<header', content)
+        self.assertNotIn('id="main-content"', content)
+        self.assertContains(response, 'СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ')
+        self.assertContains(response, 'Документ находится в подготовке')
+
+    def test_login_full_and_htmx_show_same_form_content(self):
+        full_response = self.client.get(reverse('users:login'))
+        htmx_response = self.client.get(reverse('users:login'), HTTP_HX_REQUEST='true')
+
+        for expected in (
+            'id="loginForm"',
+            'ВХОД',
+            'Добро пожаловать.',
+            'Войдите в свой аккаунт',
+            'Введите email',
+            'Введите пароль',
+            'ВОЙТИ В АККАУНТ',
+        ):
+            self.assertContains(full_response, expected)
+            self.assertContains(htmx_response, expected)
+
+    def test_register_full_and_htmx_show_same_form_content(self):
+        full_response = self.client.get(reverse('users:register'))
+        htmx_response = self.client.get(reverse('users:register'), HTTP_HX_REQUEST='true')
+
+        for expected in (
+            'id="createAccountForm"',
+            'РЕГИСТРАЦИЯ',
+            'Создайте аккаунт, чтобы получить',
+            'Введите имя',
+            'Введите фамилию',
+            'Создайте пароль',
+            'Повторите пароль',
+            'СОЗДАТЬ АККАУНТ',
+        ):
+            self.assertContains(full_response, expected)
+            self.assertContains(htmx_response, expected)
+
+    def test_registration_form_requires_legal_consents(self):
+        form = CustomUserCreationForm(data={
+            'first_name': 'Artem',
+            'last_name': 'Noctis',
+            'email': 'artem@example.com',
+            'password1': 'StrongPass123!',
+            'password2': 'StrongPass123!',
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('personal_data_consent', form.errors)
+        self.assertIn('user_agreement_consent', form.errors)
+
+    def test_registration_form_accepts_required_legal_consents(self):
+        form = CustomUserCreationForm(data={
+            'first_name': 'Artem',
+            'last_name': 'Noctis',
+            'email': 'artem@example.com',
+            'password1': 'StrongPass123!',
+            'password2': 'StrongPass123!',
+            'personal_data_consent': 'on',
+            'user_agreement_consent': 'on',
+        })
+
+        self.assertTrue(form.is_valid(), form.errors)
 
     def test_home_featured_empty_state(self):
         Product.objects.update(is_featured=False)
