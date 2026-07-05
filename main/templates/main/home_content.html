@@ -1,163 +1,836 @@
 {% load main_tags %}
 {% load static %}
-<main style="background-color: #f5f5f5;">
 
-    <!-- HERO -->
-    <section style="position: relative; min-height: 100vh; background-color: #0a0a0a; display: flex; flex-direction: column; justify-content: center; padding: 4rem 0 0 0; overflow: hidden;">
+<main class="home-page">
+    <section class="home-hero" aria-labelledby="home-hero-title">
+        <picture class="home-hero__media" aria-hidden="true">
+            <img class="home-hero__image"
+                 src="{% static 'main/img/home/hero-noctis.png' %}"
+                 alt=""
+                 loading="eager"
+                 decoding="async"
+                 fetchpriority="high">
+        </picture>
+        <div class="home-hero__overlay" aria-hidden="true"></div>
 
-        <!-- Оверлей -->
-        <div style="position: absolute; inset: 0; background: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.5) 50%, rgba(10,10,10,0.4) 100%); pointer-events: none; z-index: 1;"></div>
-
-        <video autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;">
-            <source src="{% static 'main/video/hero.mp4' %}" type="video/mp4">
-        </video>
-
-        <!-- Контент слева внизу -->
-        <div style="position: relative; z-index: 2; max-width: 800px; padding: 0 4rem 0 8rem;">
-            <h1 style="font-size: clamp(4rem, 12vw, 10rem); font-weight: 800; color: #f5f5f5; line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 2.5rem; font-family: 'Inter', sans-serif;">ANIMA<br>NOCTIS</h1>
-            <p style="font-size: 0.75rem; letter-spacing: 0.2em; color: #666; line-height: 2; margin-bottom: 3rem; font-family: 'Inter', sans-serif;">РОЖДЕНО В ТЕМНОТЕ.<br>СОЗДАНО ДЛЯ ТЕХ, КТО НЕ БОИТСЯ БЫТЬ СОБОЙ.</p>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="{% url 'main:catalog_all' %}"
-                   hx-get="{% url 'main:catalog_all' %}"
-                   hx-target="#main-content"
-                   hx-push-url="true"
-                   style="display: inline-block; padding: 1rem 2rem; background-color: #f5f5f5; color: #0a0a0a; font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 600; text-decoration: none; transition: opacity 0.2s;"
-                   onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
-                    СМОТРЕТЬ КАТАЛОГ →
-                </a>
-                <a href="#"
-                   style="display: inline-block; padding: 1rem 2rem; border: 1px solid #2a2a2a; color: #666; font-family: 'Inter', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; font-weight: 600; text-decoration: none; transition: all 0.2s;"
-                   onmouseover="this.style.borderColor='#555'; this.style.color='#999'" onmouseout="this.style.borderColor='#2a2a2a'; this.style.color='#666'">
-                    О БРЕНДЕ
-                </a>
+        <div class="home-hero__inner">
+            <div class="home-hero__content">
+                <div class="home-hero__heading">
+                    <h1 id="home-hero-title" class="home-hero__title">
+                        <span>ANIMA</span>
+                        <span>NOCTIS</span>
+                    </h1>
+                    <div class="home-hero__rule" aria-hidden="true"></div>
+                    <p class="home-hero__copy">
+                        РОЖДЕНО В ТЕМНОТЕ.<br>
+                        СОЗДАНО ДЛЯ ТЕХ, КТО НЕ БОИТСЯ БЫТЬ СОБОЙ.
+                    </p>
+                    <div class="home-hero__actions" aria-label="Основные действия">
+                        <a class="home-hero__button home-hero__button--primary"
+                           href="{% url 'main:catalog_all' %}"
+                           hx-get="{% url 'main:catalog_all' %}"
+                           hx-target="#main-content"
+                           hx-push-url="true">
+                            СМОТРЕТЬ КАТАЛОГ <span aria-hidden="true">→</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-        </div>
 
+        </div>
     </section>
 
-    <!-- MARQUEE -->
-    <div style="background-color: #0a0a0a; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 1.1rem 0; overflow: hidden; white-space: nowrap;">
-        <div style="display: inline-block; animation: marquee 25s linear infinite;">
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">ANIMA NOCTIS</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">LIMITED EDITION</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">NEW DROP 2026</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">NO RESTOCKS</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">ANIMA NOCTIS</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">LIMITED EDITION</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">NEW DROP 2026</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-            <span style="color: #f5f5f5; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 3rem;">NO RESTOCKS</span>
-            <span style="color: #2a2a2a; font-size: 0.65rem; letter-spacing: 0.35em; font-family: 'Inter', sans-serif; padding: 0 1rem;">·</span>
-        </div>
-    </div>
-
-    <!-- NEW ARRIVALS -->
-    <section style="padding: 5rem 4rem; background-color: #ffffff;">
-        <div style="max-width: 1400px; margin: 0 auto;">
-
-            <!-- Шапка -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0; margin-bottom: 3rem;">
-                <div>
-                    <h2 style="font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; color: #0a0a0a; font-family: 'Inter', sans-serif; letter-spacing: -0.02em; line-height: 1;">НОВАЯ КОЛЛЕКЦИЯ</h2>
-                </div>
-                <a href="{% url 'main:catalog_all' %}"
-                   hx-get="{% url 'main:catalog_all' %}"
-                   hx-target="#main-content"
-                   hx-push-url="true"
-                   style="font-size: 0.65rem; letter-spacing: 0.2em; color: #0a0a0a; font-family: 'Inter', sans-serif; text-decoration: none; transition: color 0.2s;"
-                   onmouseover="this.style.color='#0a0a0a'" onmouseout="this.style.color='#0a0a0a'">
-                    ВСЕ МОДЕЛИ →
-                </a>
+    <section class="home-featured" aria-labelledby="home-featured-title">
+        <div class="home-featured__inner">
+            <div class="home-featured__header">
+                <h2 id="home-featured-title" class="home-featured__title">НОВАЯ КОЛЛЕКЦИЯ</h2>
+                <div class="home-featured__line" aria-hidden="true"></div>
             </div>
 
-            <!-- Сетка товаров -->
             {% if featured_products %}
-            <div class="arrivals-grid">
+            <div class="home-product-grid">
                 {% for product in featured_products %}
-                <div class="product-featured-card"
-                     hx-get="{% url 'main:product_detail' product.slug %}"
-                     hx-target="#main-content"
-                     hx-push-url="true"
-                     style="cursor: pointer; background-color: #ffffff; border: 1px solid #e8e8e8; position: relative; transition: transform 0.3s ease; border-radius: 16px; overflow: hidden;">
-
-                    <div style="height: 400px; overflow: hidden; background-color: #ffffff;">
+                <a class="home-product-card"
+                   href="{% url 'main:product_detail' product.slug %}"
+                   hx-get="{% url 'main:product_detail' product.slug %}"
+                   hx-target="#main-content"
+                   hx-push-url="true">
+                    <figure class="home-product-card__figure">
                         {% if product.main_image %}
-                        <img src="{{ product.main_image.url }}"
+                        <img class="home-product-card__image"
+                             src="{{ product.main_image.url }}"
                              alt="{{ product.name }}"
-                             style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; mix-blend-mode: multiply;">
+                             loading="lazy">
                         {% else %}
-                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ccc; font-size: 0.7rem; font-family: 'Inter', sans-serif; letter-spacing: 0.15em;">NO IMAGE</span>
+                        <div class="home-product-card__image home-product-card__image--empty">
+                            NO IMAGE
                         </div>
                         {% endif %}
-                    </div>
-
-                    <div style="padding: 1.25rem; display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div>
-                            <p style="font-size: 0.65rem; letter-spacing: 0.15em; color: #0a0a0a; font-family: 'Inter', sans-serif; font-weight: 600; margin-bottom: 0.3rem;">{{ product.name|upper }}</p>
-                            <p style="font-size: 0.6rem; letter-spacing: 0.15em; color: #aaa; font-family: 'Inter', sans-serif; margin-bottom: 0.5rem;">{{ product.category.name|upper }}</p>
-                            <p style="font-size: 0.75rem; color: #0a0a0a; font-family: 'Inter', sans-serif; font-weight: 500;">{{ product.price|format_price }}</p>
+                    </figure>
+                    <div class="home-product-card__meta">
+                        <div class="home-product-card__copy">
+                            <p class="home-product-card__category">{{ product.category.name|upper }}</p>
+                            <h3 class="home-product-card__name">{{ product.name|upper }}</h3>
                         </div>
-                        <div style="width: 36px; height: 36px; background-color: #0a0a0a; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-radius: 50%;">
-                            <span style="color: #f5f5f5; font-size: 0.9rem; line-height: 1;">→</span>
+                        <div class="home-product-card__side">
+                            <p class="home-product-card__price">{{ product.price|format_price }}</p>
                         </div>
                     </div>
-                </div>
+                </a>
                 {% endfor %}
             </div>
             {% else %}
-            <div style="text-align: center; padding: 5rem 0;">
-                <p style="font-size: 0.7rem; letter-spacing: 0.25em; color: #bbb; font-family: 'Inter', sans-serif;">ТОВАРЫ ПОЯВЯТСЯ СКОРО</p>
+            <div class="home-featured__empty">
+                <p class="home-featured__empty-title">ТОВАРЫ ПОЯВЯТСЯ СКОРО</p>
+                <p class="home-featured__empty-copy">
+                    Новая коллекция готовится. Пока можно перейти в каталог.
+                </p>
             </div>
             {% endif %}
-
         </div>
     </section>
 
+    <section class="home-brand-panel" aria-labelledby="home-brand-panel-title">
+        <picture class="home-brand-panel__media" aria-hidden="true">
+            <img class="home-brand-panel__image"
+                 src="{% static 'main/img/home/prefooter-noctis.png' %}"
+                 alt=""
+                 loading="lazy"
+                 decoding="async">
+        </picture>
+        <div class="home-brand-panel__inner">
+            <div>
+                <h2 id="home-brand-panel-title">НЕ СЛЕДУЙ ЗА СВЕТОМ.<br>СТАНЬ ТЕМ, ЧТО ВИДНО<br>ВО ТЬМЕ.</h2>
+            </div>
+            <div class="home-brand-panel__copy">
+                <p>
+                    Мы создаем не просто одежду,<br>
+                    а форму внутренней свободы.<br>
+                    Каждая деталь — это выбор.<br>
+                    Каждый шов — это смысл.
+                </p>
+                <span>УЗНАТЬ БОЛЬШЕ О БРЕНДЕ <b aria-hidden="true">→</b></span>
+            </div>
+        </div>
+    </section>
+
+    <section class="home-signup" aria-labelledby="home-signup-title">
+        <div class="home-signup__inner">
+            <div class="home-signup__copy">
+                <h2 id="home-signup-title">ОСТАВАЙСЯ В ТЕМНОТЕ</h2>
+                <p>Подпишись и получай доступ<br>к новым дропам и закрытым релизам.</p>
+            </div>
+            <form class="home-signup__form" action="#" aria-label="Подписка на новости">
+                <label class="sr-only" for="home-signup-email">Ваш email</label>
+                <input id="home-signup-email" type="email" placeholder="ВАШ EMAIL">
+                <button type="button" aria-label="Отправить email">→</button>
+            </form>
+        </div>
+    </section>
 </main>
 
 <style>
-@keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+.home-page,
+.home-page * {
+    box-sizing: border-box;
 }
 
-.arrivals-grid {
+.home-page {
+    background: #ede9de;
+    color: #0a0a0a;
+}
+
+.home-hero {
+    position: relative;
+    min-height: max(640px, calc(100svh - 72px));
+    display: flex;
+    align-items: center;
+    background: #050505;
+    overflow: hidden;
+    color: #f5f5f5;
+}
+
+.home-hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    height: clamp(76px, 9vw, 120px);
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 18% 100%, rgba(237, 233, 222, 0.64) 0 18%, transparent 48%),
+        radial-gradient(ellipse at 58% 102%, rgba(237, 233, 222, 0.72) 0 20%, transparent 50%),
+        linear-gradient(to bottom, rgba(5, 5, 5, 0), rgba(237, 233, 222, 0.22) 58%, #ede9de 100%);
+}
+
+.home-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    pointer-events: none;
+}
+
+.home-hero__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: 72% center;
+}
+
+.home-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 78% 28%, rgba(255, 255, 255, 0.05), transparent 24rem),
+        linear-gradient(90deg, rgba(5, 5, 5, 0.86) 0%, rgba(5, 5, 5, 0.62) 43%, rgba(5, 5, 5, 0.16) 74%, rgba(5, 5, 5, 0.44) 100%),
+        linear-gradient(0deg, rgba(5, 5, 5, 0.72) 0%, rgba(5, 5, 5, 0.14) 48%, rgba(5, 5, 5, 0.5) 100%);
+}
+
+.home-hero__inner {
+    position: relative;
+    z-index: 3;
+    width: min(80vw, 1540px);
+    margin: 0 auto;
+    padding: clamp(3rem, 5vw, 5rem) 0;
+}
+
+.home-hero__content {
+    width: min(100%, 650px);
+}
+
+.home-hero__heading {
+    width: fit-content;
+    max-width: 100%;
+}
+
+.home-hero__title {
+    margin: 0;
+    width: fit-content;
+    max-width: 100%;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(5.2rem, 7.1vw, 9.1rem);
+    line-height: 0.78;
+    letter-spacing: 0.1em;
+    font-weight: 400;
+}
+
+.home-hero__title span {
+    display: block;
+    text-align: left;
+}
+
+.home-hero__title span:last-child {
+    font-size: 0.92em;
+    letter-spacing: 0.085em;
+}
+
+.home-hero__rule {
+    width: 100%;
+    height: 1px;
+    margin-top: clamp(1.15rem, 1.7vw, 1.55rem);
+    background: rgba(245, 245, 245, 0.2);
+}
+
+.home-hero__copy {
+    width: 100%;
+    margin: clamp(1.05rem, 1.4vw, 1.35rem) 0 0;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.68rem, 0.78vw, 0.82rem);
+    line-height: 1.9;
+    letter-spacing: 0.22em;
+    text-align: center;
+    color: rgba(245, 245, 245, 0.68);
+}
+
+.home-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 0.9rem;
+    margin-top: clamp(1.8rem, 2.3vw, 2.45rem);
+}
+
+.home-hero__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    min-height: 3rem;
+    padding: 1rem 1.45rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.66rem;
+    line-height: 1;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        background-color 240ms ease,
+        border-color 240ms ease,
+        box-shadow 240ms ease,
+        color 240ms ease;
+}
+
+.home-hero__button span {
+    transition: transform 240ms ease;
+}
+
+.home-hero__button--primary {
+    color: #0a0a0a;
+    background: #f2efe6;
+    border-color: rgba(242, 239, 230, 0.26);
+}
+
+.home-hero__button--primary:hover {
+    background: rgba(242, 239, 230, 0.88);
+    border-color: rgba(220, 210, 190, 0.55);
+    box-shadow: 0 0 18px rgba(220, 210, 190, 0.1);
+}
+
+.home-hero__button--primary:hover span {
+    transform: translateX(3px);
+}
+
+.home-hero__button:focus-visible {
+    outline: 1px solid rgba(220, 210, 190, 0.72);
+    outline-offset: 5px;
+    border-color: rgba(220, 210, 190, 0.62);
+    box-shadow: 0 0 0 1px rgba(220, 210, 190, 0.16);
+}
+
+.home-featured {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 7%, rgba(255, 255, 255, 0.48), transparent 24rem),
+        radial-gradient(circle at 90% 4%, rgba(100, 84, 62, 0.055), transparent 20rem),
+        linear-gradient(135deg, #eee9e0 0%, #e9e3d8 100%);
+    padding: clamp(2.9rem, 4.6vw, 5.1rem) 0 clamp(4rem, 5.5vw, 6.2rem);
+}
+
+.home-featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    background:
+        radial-gradient(ellipse at -3% 20%, rgba(70, 58, 43, 0.5), transparent 22%),
+        radial-gradient(ellipse at 103% 18%, rgba(70, 58, 43, 0.42), transparent 24%),
+        radial-gradient(ellipse at 4% 90%, rgba(70, 58, 43, 0.32), transparent 20%),
+        linear-gradient(110deg, transparent 0 16%, rgba(70, 58, 43, 0.42) 16.08%, transparent 16.22%),
+        linear-gradient(76deg, transparent 0 84%, rgba(70, 58, 43, 0.38) 84.08%, transparent 84.22%);
+}
+
+.home-featured__inner,
+.home-signup__inner,
+.home-brand-panel__inner {
+    width: min(80vw, 1540px);
+    margin: 0 auto;
+}
+
+.home-featured__inner {
+    position: relative;
+    z-index: 1;
+}
+
+.home-featured__header {
+    width: 100%;
+    text-align: center;
+}
+
+.home-featured__title {
+    margin: 0;
+    width: 100%;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.85rem, 4vw, 5.2rem);
+    line-height: 1;
+    letter-spacing: 0.14em;
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.home-featured__line {
+    height: 1px;
+    margin: clamp(1.1rem, 1.7vw, 1.7rem) auto 0;
+    background: rgba(46, 38, 28, 0.16);
+}
+
+.home-product-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: clamp(24px, 1.8vw, 32px);
+    margin-top: clamp(2.7rem, 4vw, 4.35rem);
 }
 
-.product-featured-card:hover {
-    transform: translateY(-4px);
+.home-product-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    background: rgba(246, 242, 233, 0.78);
+    border: 1px solid rgba(46, 38, 28, 0.13);
+    border-radius: 14px;
+    outline-offset: 6px;
+    transition: border-color 220ms ease;
 }
 
-.product-featured-card:hover img {
-    transform: scale(1.05);
+.home-product-card__figure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: clamp(1.2rem, 2vw, 2.1rem);
+    background: #e8e1d5;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
 }
 
-@media (max-width: 768px) {
-    section[style*="padding: 5rem 4rem"] {
-        padding: 3rem 1.5rem !important;
+.home-product-card__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center center;
+    transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-product-card__image--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    color: rgba(10, 10, 10, 0.34);
+}
+
+.home-product-card__meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 1rem;
+    min-height: 88px;
+    padding: 1rem 1.12rem 1.08rem;
+    background: rgba(250, 247, 240, 0.78);
+    border-top: 1px solid rgba(46, 38, 28, 0.1);
+}
+
+.home-product-card__copy,
+.home-product-card__side {
+    min-width: 0;
+}
+
+.home-product-card__side {
+    display: flex;
+    align-items: end;
+    justify-content: flex-end;
+}
+
+.home-product-card__name,
+.home-product-card__category,
+.home-product-card__price {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.home-product-card__category {
+    margin-bottom: 0.42rem;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(9px, 0.62vw, 10px);
+    line-height: 1.35;
+    letter-spacing: 0.16em;
+    font-weight: 500;
+    color: rgba(10, 10, 10, 0.54);
+    text-transform: uppercase;
+}
+
+.home-product-card__name {
+    font-family: 'Inter', 'Arial Narrow', 'Helvetica Neue Condensed', sans-serif;
+    font-size: clamp(15px, 1vw, 18px);
+    line-height: 1.12;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    color: currentColor;
+    text-transform: uppercase;
+}
+
+.home-product-card__price {
+    flex: 0 0 auto;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: clamp(13px, 0.86vw, 16px);
+    line-height: 1.2;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: currentColor;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.home-brand-panel__copy span {
+    color: #0a0a0a;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.66rem;
+    letter-spacing: 0.24em;
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.38);
+    padding-bottom: 0.42rem;
+}
+
+.home-featured__empty {
+    max-width: 42rem;
+    margin-top: clamp(2rem, 3.5vw, 3.25rem);
+    padding: clamp(1.5rem, 4vw, 3rem) 0;
+}
+
+.home-featured__empty-title,
+.home-featured__empty-copy {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.home-featured__empty-title {
+    font-size: clamp(1.35rem, 3vw, 2.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+}
+
+.home-featured__empty-copy {
+    max-width: 31rem;
+    margin-top: 0.9rem;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    letter-spacing: 0.08em;
+    color: rgba(10, 10, 10, 0.58);
+}
+
+.home-brand-panel {
+    position: relative;
+    min-height: clamp(330px, 24vw, 450px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: #050505;
+    color: #f4efe5;
+}
+
+.home-brand-panel__media {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.home-brand-panel__image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 0.72;
+}
+
+.home-brand-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, rgba(5, 5, 5, 0.88) 0%, rgba(5, 5, 5, 0.68) 42%, rgba(5, 5, 5, 0.22) 82%, rgba(5, 5, 5, 0.6) 100%),
+        linear-gradient(0deg, rgba(5, 5, 5, 0.72), rgba(5, 5, 5, 0.2));
+}
+
+.home-brand-panel__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.8fr);
+    gap: clamp(2rem, 7vw, 8rem);
+    align-items: center;
+}
+
+.home-brand-panel h2 {
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.1rem, 3.2vw, 4.4rem);
+    line-height: 1.28;
+    letter-spacing: 0.22em;
+    font-weight: 400;
+}
+
+.home-brand-panel__copy {
+    font-family: 'Inter', sans-serif;
+}
+
+.home-brand-panel__copy p {
+    margin: 0 0 2.2rem;
+    color: rgba(244, 239, 229, 0.68);
+    font-size: clamp(0.78rem, 0.85vw, 0.95rem);
+    line-height: 1.8;
+}
+
+.home-brand-panel__copy span {
+    color: rgba(244, 239, 229, 0.72);
+    border-color: rgba(244, 239, 229, 0.28);
+}
+
+.home-signup {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 10% 40%, rgba(154, 135, 106, 0.08), transparent 20rem),
+        linear-gradient(135deg, #f2efe6 0%, #e7e0d3 100%);
+    padding: clamp(2rem, 3.7vw, 4rem) 0;
+}
+
+.home-signup::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.2;
+    background:
+        linear-gradient(110deg, transparent 0 17%, rgba(70, 58, 43, 0.18) 17.1%, transparent 17.25%),
+        linear-gradient(76deg, transparent 0 82%, rgba(70, 58, 43, 0.18) 82.08%, transparent 82.25%);
+}
+
+.home-signup__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr minmax(18rem, 520px);
+    gap: clamp(2rem, 6vw, 7rem);
+    align-items: center;
+}
+
+.home-signup__copy {
+    justify-self: start;
+    max-width: 24rem;
+    text-align: left;
+}
+
+.home-signup h2 {
+    margin: 0 0 0.8rem;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 1.05vw, 1.25rem);
+    letter-spacing: 0.22em;
+    font-weight: 700;
+}
+
+.home-signup p {
+    margin: 0;
+    color: rgba(10, 10, 10, 0.62);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    line-height: 1.7;
+}
+
+.home-signup__form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    width: 100%;
+    min-height: 56px;
+    border: 1px solid rgba(10, 10, 10, 0.22);
+    background: rgba(242, 239, 230, 0.36);
+    outline: 0;
+    box-shadow: none;
+    transition:
+        border-color 220ms ease,
+        background-color 220ms ease,
+        box-shadow 220ms ease;
+}
+
+.home-signup__form input,
+.home-signup__form button {
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    color: #0a0a0a;
+    font-family: 'Inter', sans-serif;
+}
+
+.home-signup__form input {
+    min-width: 0;
+    padding: 0 1.45rem;
+    outline: none;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+}
+
+.home-signup__form button {
+    width: 58px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 220ms ease;
+}
+
+.home-product-card:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 5px;
+}
+
+.home-signup__form:hover {
+    border-color: rgba(120, 116, 108, 0.42);
+    background: rgba(246, 242, 233, 0.46);
+    box-shadow: 0 0 10px rgba(210, 216, 224, 0.12);
+}
+
+.home-signup__form:focus-within {
+    border-color: rgba(128, 124, 116, 0.58);
+    background: rgba(248, 245, 238, 0.54);
+    box-shadow: 0 0 14px rgba(210, 216, 224, 0.16);
+}
+
+.home-signup__form:hover button,
+.home-signup__form:focus-within button {
+    transform: translateX(3px);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .home-product-card:hover {
+        border-color: rgba(46, 38, 28, 0.28);
     }
-    .arrivals-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .product-featured-card img,
-    .product-featured-card > div:first-of-type {
-        height: 260px !important;
+
+    .home-product-card:hover .home-product-card__image {
+        transform: scale(1.02);
     }
 }
 
-@media (max-width: 480px) {
-    .arrivals-grid {
+@media (max-width: 1023px) {
+    .home-hero__inner,
+    .home-featured__inner,
+    .home-signup__inner,
+    .home-brand-panel__inner {
+        width: min(88vw, 860px);
+    }
+
+    .home-hero__image {
+        object-position: 66% center;
+    }
+
+    .home-product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+    }
+
+    .home-brand-panel__inner,
+    .home-signup__inner {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 680px) {
+    .home-hero {
+        min-height: calc(100svh - 72px);
+    }
+
+    .home-hero__inner,
+    .home-featured__inner,
+    .home-signup__inner,
+    .home-brand-panel__inner {
+        width: calc(100% - 2rem);
+    }
+
+    .home-hero__inner {
+        padding: clamp(2.4rem, 10vw, 4rem) 0;
+    }
+
+    .home-hero__title {
+        font-size: clamp(3.35rem, 16vw, 5rem);
+        letter-spacing: 0.07em;
+    }
+
+    .home-hero__copy {
+        letter-spacing: 0.11em;
+    }
+
+    .home-hero__button {
+        width: 100%;
+    }
+
+    .home-hero::after {
+        height: 72px;
+    }
+
+    .home-hero__image {
+        object-position: 62% center;
+    }
+
+    .home-featured {
+        padding-top: clamp(2.1rem, 8vw, 3rem);
+        padding-bottom: clamp(2rem, 10vw, 3.2rem);
+    }
+
+    .home-featured__title {
+        font-size: clamp(2.1rem, 10vw, 3rem);
+        letter-spacing: 0.11em;
+    }
+
+    .home-product-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-product-card__meta {
+        min-height: 78px;
+        padding: 0.95rem;
+    }
+
+    .home-brand-panel {
+        min-height: 420px;
+    }
+
+    .home-brand-panel h2 {
+        font-size: clamp(1.9rem, 10vw, 2.7rem);
+        letter-spacing: 0.16em;
+    }
+
+    .home-signup__form {
+        min-height: 52px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-product-card__image,
+    .home-hero__button,
+    .home-hero__button span,
+    .home-signup__form,
+    .home-signup__form button {
+        transition: none;
+    }
+
+    .home-product-card:hover .home-product-card__image,
+    .home-hero__button--primary:hover span,
+    .home-signup__form:hover button,
+    .home-signup__form:focus-within button {
+        transform: none;
     }
 }
 </style>

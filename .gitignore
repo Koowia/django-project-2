@@ -12,3 +12,9 @@ main/static/main/video/hero.mp4
 db.sqlite3
 media/
 debug.log
+
+/static/
+.agents/
+.claude/
+.codex/
+tmp_screenshots/

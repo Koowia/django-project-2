@@ -1,19 +1,19 @@
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, DetailView
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from .models import Category, Product, Size
 from django.db.models import Q
 
 
 class IndexView(TemplateView):
-    template_name = 'main/base.html'
+    template_name = 'main/home.html'
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
-        context['featured_products'] = Product.objects.filter(is_featured=True).order_by('-created_at')
+        context['featured_products'] = Product.objects.filter(is_featured=True).order_by('-created_at')[:3]
         context['current_category'] = None
         return context
 
@@ -26,7 +26,7 @@ class IndexView(TemplateView):
 
 
 class CatalogIndexView(TemplateView):
-    template_name = 'main/base.html'
+    template_name = 'main/catalog_index_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -42,7 +42,8 @@ class CatalogIndexView(TemplateView):
 
 
 class CatalogView(TemplateView):
-    template_name = 'main/base.html'
+    template_name = 'main/catalog_page.html'
+    catalog_index_template_name = 'main/catalog_index_page.html'
 
     FILTER_MAPPING = {
         'color': lambda queryset, value: queryset.filter(color__iexact=value),
@@ -98,23 +99,30 @@ class CatalogView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         category_slug = kwargs.get('category_slug')
+        has_filters = any([
+            request.GET.get('q'),
+            request.GET.get('color'),
+            request.GET.get('min_price'),
+            request.GET.get('max_price'),
+            request.GET.get('size'),
+        ])
         if request.headers.get('HX-Request'):
             if context.get('show_search'):
                 return TemplateResponse(request, 'main/search_input.html', context)
             elif context.get('reset_search'):
                 return TemplateResponse(request, 'main/search_button.html', {})
-            if not category_slug and not request.GET.get('q') and not any([request.GET.get('color'), request.GET.get('min_price'), request.GET.get('max_price'), request.GET.get('size')]):
+            if not category_slug and not has_filters:
                 return TemplateResponse(request, 'main/catalog_index.html', context)
             template = 'main/filter_modal.html' if request.GET.get('show_filters') == 'true' else 'main/catalog.html'
             return TemplateResponse(request, template, context)
-        if not category_slug and not request.GET.get('q') and not any([request.GET.get('color'), request.GET.get('min_price'), request.GET.get('max_price'), request.GET.get('size')]):
-            return TemplateResponse(request, 'main/base.html', {'categories': context['categories'], 'current_category': None, 'show_catalog_index': True})
+        if not category_slug and not has_filters:
+            return TemplateResponse(request, self.catalog_index_template_name, context)
         return TemplateResponse(request, self.template_name, context)
 
 
 class ProductDetailView(DetailView):
     model = Product
-    template_name = 'main/base.html'
+    template_name = 'main/product_detail_page.html'
     slug_field = 'slug'
     slug_url_kwarg = 'slug'
 

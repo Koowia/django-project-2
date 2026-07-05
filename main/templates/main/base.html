@@ -29,27 +29,140 @@
         
         .nav-link {
             position: relative;
-            transition: all 0.3s ease;
-        }
-        
-        .nav-link:hover::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background-color: black;
+            text-decoration: none;
+            transition: color 220ms ease;
         }
 
-        .nav-link.active::after {
+        .nav-link::after {
             content: '';
             position: absolute;
             bottom: -2px;
             left: 0;
             width: 100%;
             height: 1px;
-            background-color: black;
+            background-color: rgba(210, 216, 222, 0.86);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 220ms ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link:focus-visible::after,
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        .nav-link:focus-visible {
+            outline: 1px solid rgba(210, 216, 222, 0.75);
+            outline-offset: 5px;
+        }
+
+        .header-search-form {
+            border-radius: 8px;
+            transition: box-shadow 230ms ease;
+        }
+
+        .header-search-icon {
+            transition: stroke 230ms ease, opacity 230ms ease;
+        }
+
+        .header-search-input {
+            background: #111;
+            border: 1px solid #222;
+            transition: border-color 230ms ease, background-color 230ms ease, box-shadow 230ms ease;
+        }
+
+        .header-search-form:hover .header-search-input {
+            background-color: #141414;
+            border-color: #383c40;
+            box-shadow: 0 0 14px rgba(210, 216, 222, 0.08);
+        }
+
+        .header-search-form:hover .header-search-icon {
+            stroke: #9ca3aa;
+        }
+
+        .header-search-form:focus-within .header-search-input {
+            background-color: #151515;
+            border-color: #5d646b;
+            box-shadow: 0 0 0 1px rgba(210, 216, 222, 0.18), 0 0 18px rgba(210, 216, 222, 0.12);
+        }
+
+        .header-search-form:focus-within .header-search-icon {
+            stroke: #cfd5db;
+        }
+
+        .header-search-input:focus-visible {
+            outline: none;
+        }
+
+        .header-action {
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+            transition: color 200ms ease;
+        }
+
+        .header-action--icon svg {
+            opacity: 0.72;
+            transition: opacity 200ms ease, filter 200ms ease, stroke 200ms ease;
+        }
+
+        .header-action--icon:hover svg,
+        .header-action--icon:focus-visible svg {
+            opacity: 1;
+            filter: drop-shadow(0 0 4px rgba(220, 228, 240, 0.18));
+        }
+
+        .header-action--icon:focus-visible {
+            outline: none;
+        }
+
+        .header-action--text {
+            color: #b8bdc2;
+        }
+
+        .header-action--language {
+            appearance: none;
+            border: 1px solid transparent;
+            opacity: 0.76;
+            background: rgba(210, 216, 222, 0.035);
+            box-shadow: inset 0 0 0 1px rgba(210, 216, 222, 0.14);
+            line-height: 1;
+            transition: opacity 220ms ease, background-color 220ms ease, box-shadow 220ms ease, transform 220ms ease, color 220ms ease;
+        }
+
+        .header-action--language:hover {
+            opacity: 1;
+            background-color: rgba(210, 216, 222, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(210, 216, 222, 0.32), 0 0 14px rgba(210, 216, 222, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .header-action--language:focus-visible {
+            opacity: 1;
+            outline: 1px solid rgba(210, 216, 222, 0.75);
+            outline-offset: 4px;
+            background-color: rgba(210, 216, 222, 0.09);
+            box-shadow: inset 0 0 0 1px rgba(210, 216, 222, 0.38), 0 0 16px rgba(210, 216, 222, 0.11);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .nav-link,
+            .nav-link::after,
+            .header-search-form,
+            .header-search-icon,
+            .header-search-input,
+            .header-action,
+            .header-action--icon svg,
+            .header-action--language {
+                transition: none;
+            }
+
+            .header-action--language:hover {
+                transform: none;
+            }
         }
 
         /* Mobile menu styles */
@@ -138,9 +251,97 @@
         .product-featured-card:hover img {
             transform: scale(1.05);
         }
+
+        .is-home-page .site-footer {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+            background-color: #050505 !important;
+            background-image:
+                linear-gradient(180deg, rgba(5, 5, 5, 0.72) 0%, rgba(5, 5, 5, 0.88) 58%, rgba(5, 5, 5, 0.94) 100%),
+                url("{% static 'main/img/home/footer-noctis.png' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+        }
+
+        .is-home-page .site-footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(241, 239, 232, 0.12), transparent 42%),
+                linear-gradient(90deg, rgba(5, 5, 5, 0.54), transparent 34%, transparent 66%, rgba(5, 5, 5, 0.54));
+        }
+
+        .is-home-page .site-footer > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 680px) {
+            header > div > div {
+                gap: 0.75rem !important;
+                padding: 0 1rem !important;
+            }
+
+            header > div > div > div[style*="flex: 1"],
+            header > div > div > div[style*="gap: 1.25rem"] {
+                display: none !important;
+            }
+
+            header a[href="/"] span {
+                max-width: calc(100vw - 5rem);
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            #overlay {
+                width: 100vw;
+                right: auto;
+            }
+
+            #mobileMenu {
+                width: min(80vw, 320px);
+            }
+
+            footer > div:first-child {
+                padding: 3rem 1.25rem 0 !important;
+            }
+
+            footer > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 2.5rem !important;
+                padding: 3rem 1.25rem !important;
+            }
+
+            footer > div:nth-child(2) > div,
+            footer > div:nth-child(2) > div[style*="align-items: flex-end"] {
+                align-items: flex-start !important;
+                justify-self: auto !important;
+            }
+
+            footer > div:nth-child(2) > div:last-child > div {
+                align-items: flex-start !important;
+            }
+
+            footer > div:nth-child(2) > div:last-child div[style*="align-items: center"] {
+                align-items: flex-start !important;
+            }
+
+            footer > div:nth-child(2) > div:last-child p {
+                text-align: left !important;
+            }
+
+            footer > div:last-child {
+                padding: 1.5rem 1.25rem !important;
+            }
+        }
     </style>
 </head>
-<body class="bg-white" style="display: flex; flex-direction: column; min-height: 100vh;">
+<body class="bg-white {% block body_class %}{% endblock %}" style="display: flex; flex-direction: column; min-height: 100vh;">
     <!-- Mobile Menu Overlay -->
     <div id="overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
     
@@ -166,8 +367,8 @@
                    class="mobile-nav-link block text-lg font-medium text-white hover:text-gray-700 py-2 border-b border-gray-800">
                    HOME
                 </a>
-                <a href="{% url 'main:catalog_index' %}"
-                   hx-get="{% url 'main:catalog_index' %}"
+                <a href="{% url 'main:catalog_all' %}"
+                   hx-get="{% url 'main:catalog_all' %}"
                    hx-target="#main-content"
                    hx-push-url="true"
                    class="mobile-nav-link block text-lg font-medium text-white hover:text-gray-400 py-2 border-b border-gray-800">
@@ -219,9 +420,11 @@
                         <form hx-get="{% url 'main:catalog_all' %}"
                               hx-target="#main-content"
                               hx-push-url="true"
+                              class="header-search-form"
                               style="width: 100%; position: relative; display: flex; align-items: center;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 1rem; pointer-events: none; flex-shrink: 0;"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+                            <svg class="header-search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 1rem; pointer-events: none; flex-shrink: 0;"><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
                             <input id="search-input-desktop"
+                                   class="header-search-input"
                                    type="search"
                                    name="q"
                                    placeholder="Найти товар..."
@@ -231,7 +434,7 @@
                                    hx-target="#main-content"
                                    hx-push-url="true"
                                    value=""
-                                   style="width: 100%; background: #111; border: 1px solid #222; border-radius: 8px; padding: 0 1rem 0 2.75rem; height: 40px; color: #f5f5f5; font-size: 0.75rem; font-family: 'Inter', sans-serif; letter-spacing: 0.08em; outline: none; caret-color: #f5f5f5; text-transform: uppercase;">
+                                   style="width: 100%; border-radius: 8px; padding: 0 1rem 0 2.75rem; height: 40px; color: #f5f5f5; font-size: 0.75rem; font-family: 'Inter', sans-serif; letter-spacing: 0.08em; outline: none; caret-color: #f5f5f5; text-transform: uppercase;">
                             <div id="search-suggestions" style="position: absolute; top: 100%; left: 0; right: 0; background: #111; border: 1px solid #222; border-top: none; border-radius: 0 0 8px 8px; z-index: 1000; display: none;"></div>
                         </form>
                     </div>
@@ -241,19 +444,20 @@
                 <div style="display: flex; align-items: center; gap: 1.25rem; flex-shrink: 0;">
 
                     <!-- Language -->
-                    <span style="font-size: 0.65rem; letter-spacing: 0.1em; color: #888; font-family: 'Inter', sans-serif; cursor: pointer; border: 1px solid #2a2a2a; padding: 4px 8px; border-radius: 4px;">RU</span>
+                    <button type="button" class="header-action header-action--text header-action--language" style="font-size: 0.65rem; letter-spacing: 0.1em; font-family: 'Inter', sans-serif; cursor: pointer; padding: 4px 8px; border-radius: 4px;">RU</button>
 
                     <!-- Account -->
                     <a href="{% url 'users:profile' %}"
                        hx-get="{% url 'users:profile' %}"
                        hx-target="#main-content"
                        hx-push-url="true"
+                       class="header-action header-action--icon"
                        style="color: #f5f5f5; display: flex; align-items: center;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/><circle cx="12" cy="12" r="10"/></svg>
                     </a>
 
                     <!-- Cart -->
-                    <a href="#" id="desktopCart" style="color: #f5f5f5; display: flex; align-items: center; position: relative;">
+                    <a href="#" id="desktopCart" class="header-action header-action--icon" style="color: #f5f5f5; display: flex; align-items: center; position: relative;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
                         {% if cart_count and cart_count > 0 %}
                         <span id="cart-count" style="position: absolute; top: -6px; right: -8px; background: #e63535; color: #fff; font-size: 10px; font-weight: 700; font-family: 'Inter', sans-serif; min-width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0 3px; line-height: 1;">{{ cart_count }}</span>
@@ -276,13 +480,11 @@
 
     <!-- Main Content -->
     <div id="main-content" style="flex: 1; padding-top: 0;">
-        {% block content %}
-        {% include 'main/home_content.html' %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 
     <!-- Footer -->
-<footer style="background-color: #0a0a0a; border-top: 1px solid #1a1a1a;">
+<footer class="site-footer" style="background-color: #0a0a0a; border-top: 1px solid #1a1a1a;">
 
     <div style="padding: 4rem 4rem 0; border-bottom: 1px solid #1a1a1a;">
         <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(1.8rem, 4.5vw, 5rem); font-weight: 300; color: #f5f5f5; letter-spacing: 0.3em; line-height: 1; text-align: center; padding: 1rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ANIMA NOCTIS</p>
@@ -360,6 +562,12 @@
             const closeMenu = document.getElementById('closeMenu');
             const mobileMenu = document.getElementById('mobileMenu');
             const overlay = document.getElementById('overlay');
+
+            function updatePageShellState() {
+                document.body.classList.toggle('is-home-page', window.location.pathname === '/');
+            }
+
+            updatePageShellState();
     
             function openMobileMenu() {
                 mobileMenu.classList.add('open');
@@ -454,6 +662,7 @@
     
             // Update active navigation links after HTMX requests
             document.addEventListener('htmx:afterSettle', function() {
+                updatePageShellState();
                 updateActiveNavLinks();
                 setTimeout(()=>{
                     fetch('{% url "cart:cart_count" %}')
@@ -479,6 +688,10 @@
                 if (e.detail && e.detail.total_items !== undefined) {
                     updateHeaderCartCount(e.detail.total_items);
                 }
+            });
+
+            window.addEventListener('popstate', function() {
+                setTimeout(updatePageShellState, 0);
             });
         });
         
