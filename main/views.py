@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, DetailView
 from django.http import JsonResponse
 from django.template.response import TemplateResponse
 from .models import Category, Product, Size
-from django.db.models import Q
+from django.db.models import Count, Q
 
 
 LEGAL_DOCUMENTS = {
@@ -40,7 +40,14 @@ class CatalogIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
+        categories = list(
+            Category.objects.filter(is_visible=True)
+            .annotate(product_count=Count('products'))
+            .order_by('display_order', 'id')
+        )
+        context['categories'] = categories
+        context['mosaic_categories'] = categories[:8]
+        context['additional_categories'] = categories[8:]
         context['current_category'] = None
         return context
 
@@ -66,7 +73,11 @@ class CatalogView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         category_slug = kwargs.get('category_slug')
-        categories = Category.objects.all()
+        categories = list(
+            Category.objects.filter(is_visible=True)
+            .annotate(product_count=Count('products'))
+            .order_by('display_order', 'id')
+        )
         products = Product.objects.all().order_by('-created_at')
         current_category = None
 
@@ -91,6 +102,8 @@ class CatalogView(TemplateView):
 
         context.update({
             'categories': categories,
+            'mosaic_categories': categories[:8],
+            'additional_categories': categories[8:],
             'products': products,
             'current_category': category_slug,
             'filter_params': filter_params,

@@ -5,6 +5,14 @@ from django.utils.text import slugify
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100, unique=True)
+    catalog_image = models.ImageField(
+        upload_to='categories/catalog/',
+        blank=True,
+        null=True,
+    )
+    catalog_image_alt = models.CharField(max_length=255, blank=True)
+    display_order = models.PositiveIntegerField(default=100)
+    is_visible = models.BooleanField(default=True)
 
 
     def save(self, *args, **kwargs):

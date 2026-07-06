@@ -56,6 +56,21 @@ class MainRenderingTests(TestCase):
             is_featured=True,
         )
 
+    def create_product_for_category(self, category, number):
+        return Product.objects.create(
+            name=f'{category.slug} Product {number}',
+            slug=f'{category.slug}-product-{number}',
+            category=category,
+            color='Black',
+            price=Decimal('100.00') + number,
+            description=f'Catalog product {number}.',
+            main_image=SimpleUploadedFile(
+                f'{category.slug}-{number}.jpg',
+                b'test-image-content',
+                content_type='image/jpeg',
+            ),
+        )
+
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
@@ -89,6 +104,9 @@ class MainRenderingTests(TestCase):
 
     def count_home_product_cards(self, content):
         return len(re.findall(r'class="home-product-card(?:\s|")', content))
+
+    def count_catalog_category_cards(self, content):
+        return len(re.findall(r'class="catalog-card(?:\s|")', content))
 
     def assert_ordered(self, content, expected_items):
         positions = [content.index(item) for item in expected_items]
@@ -213,6 +231,73 @@ class MainRenderingTests(TestCase):
 
         self.assert_htmx_partial(response)
         self.assertContains(response, 'КАТАЛОГ')
+
+    def test_catalog_index_hides_invisible_categories(self):
+        Category.objects.create(
+            name='Hidden Category',
+            slug='hidden-category',
+            is_visible=False,
+        )
+
+        response = self.client.get(reverse('main:catalog_all'), HTTP_HX_REQUEST='true')
+
+        self.assertContains(response, self.category.name)
+        self.assertNotContains(response, 'Hidden Category')
+
+    def test_catalog_index_orders_categories_by_display_order(self):
+        self.category.display_order = 20
+        self.category.save(update_fields=['display_order'])
+        early_category = Category.objects.create(
+            name='Early Category',
+            slug='early-category',
+            display_order=5,
+        )
+
+        response = self.client.get(reverse('main:catalog_all'), HTTP_HX_REQUEST='true')
+        content = response.content.decode()
+
+        self.assertLess(content.index(early_category.name), content.index(self.category.name))
+
+    def test_catalog_index_category_counts_are_dynamic(self):
+        self.create_product_for_category(self.category, 2)
+
+        response = self.client.get(reverse('main:catalog_all'), HTTP_HX_REQUEST='true')
+
+        self.assertContains(response, '2 товара')
+        self.assertNotContains(response, '01 ТОВАР')
+
+    def test_catalog_index_renders_without_category_image(self):
+        self.category.catalog_image = ''
+        self.category.save(update_fields=['catalog_image'])
+
+        response = self.client.get(reverse('main:catalog_all'), HTTP_HX_REQUEST='true')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'catalog-card__fallback')
+        self.assertContains(response, self.category.name)
+
+    def test_catalog_index_handles_zero_one_five_eight_and_ten_categories(self):
+        for category_count in (0, 1, 5, 8, 10):
+            with self.subTest(category_count=category_count):
+                Product.objects.all().delete()
+                Category.objects.all().delete()
+
+                for number in range(category_count):
+                    category = Category.objects.create(
+                        name=f'Category {number + 1}',
+                        slug=f'category-{number + 1}',
+                        display_order=number,
+                    )
+                    if number == 0:
+                        self.create_product_for_category(category, number + 1)
+
+                response = self.client.get(reverse('main:catalog_all'), HTTP_HX_REQUEST='true')
+                content = response.content.decode()
+
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(self.count_catalog_category_cards(content), category_count)
+                self.assertNotIn('<html', content)
+                self.assertNotIn('<footer', content)
 
     def test_htmx_get_category(self):
         response = self.client.get(

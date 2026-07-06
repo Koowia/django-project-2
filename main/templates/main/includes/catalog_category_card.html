@@ -1,0 +1,28 @@
+{% load main_tags %}
+<a href="{% url 'main:catalog' category.slug %}"
+   hx-get="{% url 'main:catalog' category.slug %}"
+   hx-target="#main-content"
+   hx-push-url="true"
+   class="{{ card_class }}">
+    <div class="catalog-card__media" aria-hidden="true">
+        {% if category.catalog_image %}
+        <img src="{{ category.catalog_image.url }}"
+             alt="{{ category.catalog_image_alt|default:category.name }}"
+             class="catalog-card__image">
+        {% else %}
+        <div class="catalog-card__fallback">
+            <svg viewBox="0 0 96 96" focusable="false">
+                <path d="M48 10v76M10 48h76M22 22l52 52M74 22 22 74"/>
+                <circle cx="48" cy="48" r="13"/>
+            </svg>
+        </div>
+        {% endif %}
+    </div>
+    <div class="catalog-card__body">
+        <h2 class="catalog-card__name">{{ category.name }}</h2>
+        <span class="catalog-card__meta">
+            {{ category.product_count|pluralize_ru:"товар,товара,товаров" }}
+            <span class="catalog-card__arrow" aria-hidden="true">→</span>
+        </span>
+    </div>
+</a>

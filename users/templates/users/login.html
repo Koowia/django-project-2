@@ -56,15 +56,23 @@
         text-align: center;
     }
 
-    .auth-heading h1 {
-        margin: 0;
+    .auth-title {
+        --title-tracking: 0.22em;
+        display: block;
+        width: max-content;
+        max-width: 100%;
+        margin: 0 auto;
         color: #f3eee4;
         font-family: 'Cormorant Garamond', Georgia, serif;
         font-size: clamp(3rem, 4vw, 4.6rem);
         line-height: 0.95;
-        letter-spacing: 0.22em;
+        letter-spacing: var(--title-tracking);
         font-weight: 400;
         text-transform: uppercase;
+    }
+
+    .auth-title--login {
+        padding-left: var(--title-tracking);
     }
 
     .auth-heading__rule {
@@ -460,9 +468,9 @@
             margin: clamp(2.5rem, 8vh, 4rem) 0 0;
         }
 
-        .auth-heading h1 {
+        .auth-title {
+            --title-tracking: 0.18em;
             font-size: clamp(2.7rem, 12vw, 3.8rem);
-            letter-spacing: 0.18em;
         }
 
         .auth-row {
@@ -495,7 +503,7 @@
     <div class="auth-screen__inner">
         <div class="auth-panel">
             <div class="auth-heading">
-                <h1 id="auth-login-title">ВХОД</h1>
+                <h1 id="auth-login-title" class="auth-title auth-title--login">ВХОД</h1>
                 <div class="auth-heading__rule" aria-hidden="true">
                     <span class="auth-heading__line"></span>
                     <svg class="auth-heading__star" viewBox="0 0 24 24">
